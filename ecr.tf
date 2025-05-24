@@ -7,6 +7,7 @@ resource "aws_ecr_repository" "test" {
   image_scanning_configuration {
     scan_on_push = true
   }
+  force_delete = true
 }
 
 data "aws_ecr_lifecycle_policy_document" "test" {
@@ -37,8 +38,13 @@ resource "aws_ecr_repository_policy" "lambda" {
 
 data "aws_iam_policy_document" "lambda" {
   statement {
-    actions = ["ecr:BatchCheckLayerAvailability", "ecr:CompleteLayerUpload", "ecr:InitiateLayerUpload", "ecr:PutImage"]
-    effect  = "Allow"
+    actions = [
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:CompleteLayerUpload",
+      "ecr:InitiateLayerUpload",
+      "ecr:PutImage"
+    ]
+    effect = "Allow"
     principals {
       type        = "Service"
       identifiers = ["lambda.amazonaws.com"]

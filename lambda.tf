@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "lambda_policy" {
       "logs:PutLogEvents",
       "logs:DescribeLogStreams"
     ]
-    effect  = "Allow"
+    effect    = "Allow"
     resources = ["*"]
   }
 }
