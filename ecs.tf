@@ -76,26 +76,26 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_role_policy" {
 }
 
 # ECSサービスの作成
-# resource "aws_ecs_service" "test" {
-#     for_each = toset(var.images)
+resource "aws_ecs_service" "test" {
+    for_each = toset(var.images)
 
-#   name            = "${var.pj_name}-${each.value}"
-#   cluster         = aws_ecs_cluster.test.id
-#   task_definition = aws_ecs_task_definition.test[each.value].arn
-#   desired_count   = 1
-#   launch_type     = "FARGATE"
+  name            = "${var.pj_name}-${each.value}"
+  cluster         = aws_ecs_cluster.test.id
+  task_definition = aws_ecs_task_definition.test[each.value].arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
 
-#   network_configuration {
-#     security_groups = [aws_security_group.ecs_tasks.id]
-#     subnets         = aws_subnet.public[*].id
-#     assign_public_ip = false
-#   }
+  network_configuration {
+    security_groups = [aws_security_group.ecs_tasks.id]
+    subnets         = aws_subnet.public[*].id
+    assign_public_ip = true
+  }
 
-#   load_balancer {
-#     target_group_arn = aws_lb_target_group.app.arn
-#     container_name   = "${var.pj_name}-container"
-#     container_port   = 8501
-#   }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.app.arn
+    container_name   = "${var.pj_name}-container"
+    container_port   = 8501
+  }
 
-#   depends_on = [aws_lb_listener.http]
-# }
+  depends_on = [aws_lb_listener.http]
+}
