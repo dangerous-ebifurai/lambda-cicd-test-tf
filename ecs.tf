@@ -17,12 +17,12 @@ resource "aws_ecs_cluster" "test" {
 data "aws_ecr_image" "test" {
   for_each        = toset(var.images)
   repository_name = "${var.pj_name}/${each.value}"
-  image_tag = "latest"
+  image_tag       = "latest"
 }
 
 # タスク定義の作成
 resource "aws_ecs_task_definition" "test" {
-  for_each = toset(var.images)
+  for_each                 = toset(var.images)
   family                   = "${var.pj_name}-${each.value}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
@@ -77,7 +77,7 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_role_policy" {
 
 # ECSサービスの作成
 resource "aws_ecs_service" "test" {
-    for_each = toset(var.images)
+  for_each = toset(var.images)
 
   name            = "${var.pj_name}-${each.value}"
   cluster         = aws_ecs_cluster.test.id
@@ -86,8 +86,8 @@ resource "aws_ecs_service" "test" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    security_groups = [aws_security_group.ecs_tasks.id]
-    subnets         = aws_subnet.public[*].id
+    security_groups  = [aws_security_group.ecs_tasks.id]
+    subnets          = aws_subnet.public[*].id
     assign_public_ip = true
   }
 
